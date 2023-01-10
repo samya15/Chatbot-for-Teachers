@@ -1,0 +1,325 @@
+#include <stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include <windows.h>
+#include<MMsystem.h>
+
+
+//ppt
+
+//more questions
+
+//exit
+
+struct DateCount
+{
+    char dates[100];
+};
+struct Attendance
+{
+    char Date[10];
+	int roll_no;
+	char fname[100];
+	char lname[100];
+    char Leave_Type[20];
+};
+void ChatBot(char choice[])
+{
+    if(choice=="Intro")
+    {
+        printf("\n---------------------------------------Welcome to the Teachers' ChatBot----------------------------------------------\n");
+        //PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\welcome.wav"),NULL,SND_SYNC);
+        char name[50];
+        fflush(stdin);
+        printf("Please enter your name: ");
+        //PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\please enter your name.wav"),NULL,SND_SYNC);
+        scanf("%[^\n]%*c",&name);
+        printf("\nHey %s, how may I help you?\n",name);
+        //PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\hey there.wav"),NULL,SND_SYNC);
+        fflush(stdin);
+        ChatBot("MainMenu");
+    }
+    else if(choice=="MainMenu")
+    {
+        printf("\n-------------------------MAIN MENU--------------------------\n");
+        printf("\n1.----------------------Open Guide--------------------------");
+        printf("\n2.-------------------Ask me a question----------------------");
+        printf("\n3.-------------------Manage Attendance----------------------");
+        printf("\n4.--------------------------Exit----------------------------\n");
+        int ch;
+        printf("Enter your choice: ");
+        //PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\main menu.wav"),NULL,SND_SYNC);
+        scanf("%d",&ch);
+        if(ch==1)
+        {
+            fflush(stdin);
+            ChatBot("Guide");
+        }
+        else if(ch==2)
+        {
+            fflush(stdin);
+            ChatBot("Question");
+        }
+        else if(ch==3)
+        {
+            fflush(stdin);
+            ChatBot("Attendance");
+        }
+        else if(ch==4)
+        {
+            fflush(stdin);
+            exit(0);
+        }
+        else
+        {
+            printf("Wrong choice!! Enter only the numbers indicated against the choices.\n");
+            PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\wrong choice.wav"),NULL,SND_SYNC);
+            fflush(stdin);
+            ChatBot("MainMenu");
+        }
+    }
+    else if(choice=="Guide")//file handling
+    {
+        FILE *fp;
+        char ch;
+        fp=fopen("Guide.txt","r");
+        char guide_data[1000];
+        do {
+            ch = fgetc(fp);
+            printf("%c", ch);
+        } while (ch != EOF);
+        fclose(fp);
+        fflush(stdin);
+        printf("Press Enter to go back to Main Menu.\n");
+        PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\the guide.wav"),NULL,SND_SYNC);
+        getch();
+        ChatBot("MainMenu");
+    }
+    else if(choice=="Question")
+    {
+        char question[500];
+        fflush(stdin);//took care of this
+        printf("Enter your question: ");
+        PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\enter your question.wav"),NULL,SND_SYNC);
+        scanf("%[^\n]%*c",&question);
+        strlwr(question);//question in lower case
+        if(strcmp(question,"shut down")==0||strcmp(question,"shut down the laptop")==0||strcmp(question,"power off")==0||strcmp(question,"power off the laptop")==0)
+        {
+            PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\shut down.wav"),NULL,SND_SYNC);
+            system("c:\\windows\\system32\\shutdown /s");
+        }
+        else if(strcmp(question,"restart")==0||strcmp(question,"restart the laptop")==0)
+        {
+            PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\restart.wav"),NULL,SND_SYNC);
+            system("c:\\windows\\system32\\shutdown /r");
+        }
+        else if(strcmp(question,"hibernate")==0||strcmp(question,"hibernate the laptop")==0)
+        {
+            PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\hibernate.wav"),NULL,SND_SYNC);
+            system("c:\\windows\\system32\\shutdown /h");
+        }
+        else if(strcmp(question,"open paint")==0||strcmp(question,"run paint")==0||strcmp(question,"open mspaint")==0||strcmp(question,"open ms paint")==0||strcmp(question,"open microsoft paint")==0)
+        {
+            PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\paint.wav"),NULL,SND_SYNC);
+            system("cmd /c mspaint");
+            fflush(stdin);
+            ChatBot("MainMenu");
+        }
+        else if(strcmp(question,"open notepad")==0||strcmp(question,"run notepad")==0)//used strcmp
+        {
+            PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\notepad.wav"),NULL,SND_SYNC);
+            system("cmd /c notepad");
+            fflush(stdin);
+            ChatBot("MainMenu");
+        }
+        else if(strcmp(question,"open calculator")==0||strcmp(question,"run calculator")==0)
+        {
+            PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\calculator.wav"),NULL,SND_SYNC);
+            system("cmd /c calc");
+            fflush(stdin);
+            ChatBot("MainMenu");
+        }
+    }
+    else if(choice=="Attendance")
+    {
+        printf("\n--------------------ATTENDANCE MANAGEMENT SYSTEM----------------------\n");
+        printf("\n1.-----------------------Mark Attendance------------------------------");
+        printf("\n2.-------------------Check Attendance Date wise-----------------------");
+        printf("\n3.------------------Check Attendance Percentage-----------------------");
+        printf("\n4.------------------------Go to Main Menu---------------------------------\n");
+        int chm;
+        fflush(stdin);
+        printf("Enter your choice: ");
+        //PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\attendance menu.wav"),NULL,SND_SYNC);
+        scanf("%d",&chm);
+        if(chm==1)
+        {
+            char class_name[10],class_nameor[10];
+            fflush(stdin);
+            printf("NOTE: Enter the class name in the following format: 12A, 5B etc.\nEnter the class name: ");
+            PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\enter the classname.wav"),NULL,SND_SYNC);
+            scanf("%s",&class_name);
+            strcpy(class_nameor,class_name);
+            strcat(class_name,".txt");
+            FILE *ptr = NULL;
+            ptr = fopen(class_name,"r");
+            char ch;
+            do {
+                ch=fgetc(ptr);
+                printf("%c",ch);
+            } while(ch != EOF);
+            printf("\n");
+            fclose(ptr);
+            strcat(class_nameor,"_Attendance.dat");
+            FILE *outfile;
+            outfile = fopen (class_nameor, "a");
+            if (outfile == NULL)
+            {
+                fprintf(stderr, "\nError opened file\n");
+                exit (1);
+            }
+            struct Attendance input1;
+            fflush(stdin);
+            printf("\nEnter today's Date (in the format DD/MM/YYYY): ");
+            PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\enter todays date.wav"),NULL,SND_SYNC);
+            scanf("%s",&input1.Date);
+            while(1)
+            {
+                fflush(stdin);
+                printf("\nEnter Roll no.: ");
+                PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\enter rno.wav"),NULL,SND_SYNC);
+                scanf("%d",&input1.roll_no);
+                fflush(stdin);
+                printf("Enter First name: ");
+                PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\enter fname.wav"),NULL,SND_SYNC);
+                scanf("%s",&input1.fname);
+                fflush(stdin);
+                printf("Enter Last name: ");
+                PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\enter lname.wav"),NULL,SND_SYNC);
+                scanf("%s",&input1.lname);
+                printf("Types of leaves:\n1-------Casual Leave\n2-------Medical Leave\n3-------Educational Tour\n");
+                fflush(stdin);
+                printf("Enter Leave Type: ");
+                PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\leave type.wav"),NULL,SND_SYNC);
+                scanf("%s",&input1.Leave_Type);
+                fwrite (&input1, sizeof(struct Attendance), 1, outfile);
+                if(fwrite != 0)
+                    printf("\nRecord added Successfully!\n");
+                    PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\record added success.wav"),NULL,SND_SYNC);
+                char ch;
+                fflush(stdin);
+                printf("\nDo you want to enter more absentees?\nEnter your choice(Y/N): ");
+                PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\more absentees.wav"),NULL,SND_SYNC);
+                scanf("%c",&ch);
+                if(ch=='N')
+                {
+                    break;
+                }
+            }
+            fclose (outfile);
+            printf("\nAttendance Saved Successfully!\n");
+            PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\att saved success.wav"),NULL,SND_SYNC);
+            fflush(stdin);
+            ChatBot("Attendance");
+        }
+        else if(chm==2)
+        {
+            FILE *infile;
+            struct Attendance input;
+            char Datem[100],class_namem[100];
+            fflush(stdin);
+            printf("\nEnter the Date (in the format DD/MM/YYYY): ");
+            PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\enter date.wav"),NULL,SND_SYNC);
+            scanf("%s",&Datem);
+            printf("NOTE: Enter the class name in the following format: 12A, 5B etc.\nEnter the class name: ");
+            PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\enter classname.wav"),NULL,SND_SYNC);
+            scanf("%s",&class_namem);
+            strcat(class_namem,"_Attendance.dat");
+            infile = fopen (class_namem, "r");
+            if (infile == NULL)
+            {
+                fprintf(stderr, "\nError opening file\n");//Check both
+                exit (1);
+            }
+
+            while(fread(&input, sizeof(struct Attendance), 1, infile))
+            {
+                if(strcmp(input.Date,Datem)==0)
+                    printf ("\nRoll no.: %d\nName: %s %s\nLeave Type: %s\nDate: %s\n\n", input.roll_no, input.fname, input.lname, input.Leave_Type, input.Date);
+            }
+            fclose (infile);
+            fflush(stdin);
+            ChatBot("Attendance");
+        }
+        else if(chm==3)
+        {
+            struct DateCount arr[1000];
+            FILE *infile;
+            struct Attendance input;
+            char Name[100],class_namem[100];
+            fflush(stdin);
+            printf("\nEnter Name of the Student: ");
+            scanf("%[^\n]%*c",&Name);
+            printf("NOTE: Enter the class name in the following format: 12A, 5B etc.\nEnter the class name: ");
+            scanf("%s",&class_namem);
+            strcat(class_namem,"_Attendance.dat");
+            infile = fopen (class_namem, "r");
+            if (infile == NULL)
+            {
+                fprintf(stderr, "\nError opening file\n");//Check both
+                exit (1);
+            }
+            int count=0;
+            int total=0;
+            int arrLen=0;
+            int i=0;
+            int arrleng=sizeof(arr) / sizeof((arr)[0]);
+            fflush(stdin);
+            while(fread(&input, sizeof(struct Attendance), 1, infile))
+            {
+                strcat(input.fname," ");
+                strcat(input.fname,input.lname);
+                if(strcmp(input.fname,Name)==0)
+                    count++;
+                for(i;i<arrleng;i++)
+                {
+                    if(strcmp(arr[i].dates,input.Date)==1)
+                    {
+                        printf("JJ");
+                        strcpy(arr[arrLen].dates,input.Date);
+                        arrLen++;
+                    }
+                }
+            }
+            fclose (infile);
+            float att_per=((arrLen-count)/arrLen)*100;
+            int pass_per=60;
+            printf("\nTotal Working Days: %d\n",arrLen+1);
+            printf("No. of Leaves taken by %s: %d\n\n",Name,count);
+            printf("Present/Attendance Percentage of %s: %f\n",Name,att_per);
+            printf("Passing Percentage(to appear in exams): %d\n",pass_per);
+            if(att_per>=pass_per)
+                printf("%s can appear in the exam.\n\n",Name);
+            else
+                printf("%s cannot appear in the exam.\n\n",Name);
+            fflush(stdin);
+            ChatBot("Attendance");
+        }
+        else if(chm==4)
+        {
+            fflush(stdin);
+            ChatBot("MainMenu");
+        }
+        else
+        {
+            printf("Wrong choice!! Enter only the numbers indicated against the choices.\n");
+            PlaySound(TEXT("C:\\Users\\dell\\Desktop\\voices\\wrong choice.wav"),NULL,SND_SYNC);
+            fflush(stdin);
+            ChatBot("Attendance");
+        }
+    }
+}
+int main()
+{
+    ChatBot("Intro");
+}
